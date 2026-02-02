@@ -176,6 +176,7 @@ sed -i 's/#PubkeyAuthentication yes/PubkeyAuthentication yes/g' /etc/ssh/sshd_co
 sed -i 's/#TCPKeepAlive yes/TCPKeepAlive no/g' /etc/ssh/sshd_config
 sed -i 's/^#*PasswordAuthentication.*/PasswordAuthentication no/g' /etc/ssh/sshd_config
 sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin no/g' /etc/ssh/sshd_config
+sed -i 's/X11Forwarding yes/X11Forwarding no/g' /etc/ssh/sshd_config
 # Setup SSH key authentication
 mkdir -p /home/user/.ssh
 echo "${SSH_PUBKEY}" >> /home/user/.ssh/authorized_keys
