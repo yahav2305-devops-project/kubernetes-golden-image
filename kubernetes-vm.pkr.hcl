@@ -87,9 +87,29 @@ source "proxmox-iso" "vm" {
   template_description = "${var.template_description}"
 
   # Boot configuration
-  boot         = "${var.boot_order}"
-  boot_wait    = "${var.boot_wait}"
-  boot_command = "${var.boot_command}"
+  boot      = "order=scsi2;scsi0;net0"
+  boot_wait = "5s"
+  boot_command = [
+    # Go to boot menu
+    "<esc><wait>",
+    # Try and start preseed (will fail)
+    "/install.amd/vmlinuz ",
+    "initrd=/install.amd/initrd.gz ",
+    "auto-install/enable=true ",
+    "debconf/priority=critical ",
+    "preseed/file=/mnt/cdrom2/preseed.cfg<enter><wait40>",
+    # Switch to another terminal
+    "<leftAltOn><f2><leftAltOff><wait3>",
+    "<enter><wait3>",
+    # Mount preseed iso
+    "mkdir /mnt/cdrom2<enter>",
+    "mount /dev/disk/by-label/PRESEED /mnt/cdrom2<enter><wait3>",
+    # Back to main screen
+    "<leftAltOn><f1><leftAltOff><wait3>",
+    # Try to boot from file again (will work since it is now mounted)
+    "<enter><wait><enter><wait><wait>",
+    "<down><down><down><down><enter>"
+  ]
 
   ssh_username           = "${var.user_username}"
   ssh_password           = "${var.user_password}"

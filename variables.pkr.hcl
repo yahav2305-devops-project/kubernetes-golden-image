@@ -184,24 +184,6 @@ variable "cpu_sockets" {
   description = "vm cpu sockets, e.g. 1"
 }
 
-variable "boot_order" {
-  type        = string
-  sensitive   = false
-  description = "vm will try to boot from devices in this order, e.g. order=scsi0;ide1;net0"
-}
-
-variable "boot_wait" {
-  type        = string
-  sensitive   = false
-  description = "The amount of time Packer will wait before entering the boot command"
-}
-
-variable "boot_command" {
-  type        = list(string)
-  sensitive   = false
-  description = "Packer will run these commands on initial vm boot"
-}
-
 variable "packages_to_install" {
   type        = string
   sensitive   = true
