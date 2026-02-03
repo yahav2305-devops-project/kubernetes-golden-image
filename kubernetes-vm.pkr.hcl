@@ -81,6 +81,13 @@ source "proxmox-iso" "vm" {
   onboot             = true
   disable_kvm        = false
 
+  # RNG from host to VM (otherwise all VMs will have similar randomness seeds)
+  rng0 {
+    source    = "/dev/urandom"
+    max_bytes = 1024
+    period    = 1000
+  }
+
   # VM location & name
   node                 = "${var.proxmox_node}"
   template_name        = "${var.template_name}"
