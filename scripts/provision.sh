@@ -180,6 +180,7 @@ sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin no/g' /etc/ssh/sshd_config
 sed -i 's/X11Forwarding yes/X11Forwarding no/g' /etc/ssh/sshd_config
 # Setup SSH key authentication
 mkdir -p /home/user/.ssh
+touch /home/user/.ssh/authorized_keys
 ## SSH folder permissions
 chmod 600 /etc/ssh/sshd_config
 chown -R user:user /home/user/.ssh
@@ -241,8 +242,6 @@ sed -i 's/^disk_error_action.*/disk_error_action = syslog/' /etc/audit/auditd.co
 sed -i 's/^disk_full_action.*/disk_full_action = rotate/' /etc/audit/auditd.conf
 sed -i 's/^max_log_file.*/max_log_file = 5/' /etc/audit/auditd.conf
 sed -i 's/^space_left_action.*/space_left_action = rotate/' /etc/audit/auditd.conf
-systemctl reload auditd || true
-
 ### Rules
 echo "-c" >> /etc/audit/rules.d/01-initialize.rules
 cat <<EOF > /etc/audit/rules.d/50-scope.rules
