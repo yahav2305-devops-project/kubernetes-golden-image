@@ -236,11 +236,13 @@ systemctl enable --now haveged
 printf '/usr/local/sbin/haveged -w 1024' > /etc/rc.local
 ## AuditD
 ### Configuration
-sed -i 's/admin_space_left_action = SUSPEND/admin_space_left_action = rotate/g' /etc/audit/auditd.conf
-sed -i 's/disk_error_action = SUSPEND/disk_error_action = syslog/g' /etc/audit/auditd.conf
-sed -i 's/disk_full_action = SUSPEND/disk_full_action = rotate/g' /etc/audit/auditd.conf
-sed -i 's/max_log_file = 8/max_log_file = 5/g' /etc/audit/auditd.conf
-sed -i 's/space_left_action = SYSLOG/space_left_action = rotate/g' /etc/audit/auditd.conf
+sed -i 's/^admin_space_left_action.*/admin_space_left_action = rotate/' /etc/audit/auditd.conf
+sed -i 's/^disk_error_action.*/disk_error_action = syslog/' /etc/audit/auditd.conf
+sed -i 's/^disk_full_action.*/disk_full_action = rotate/' /etc/audit/auditd.conf
+sed -i 's/^max_log_file.*/max_log_file = 5/' /etc/audit/auditd.conf
+sed -i 's/^space_left_action.*/space_left_action = rotate/' /etc/audit/auditd.conf
+systemctl reload auditd || true
+
 ### Rules
 echo "-c" >> /etc/audit/rules.d/01-initialize.rules
 cat <<EOF > /etc/audit/rules.d/50-scope.rules
@@ -394,7 +396,7 @@ systemctl enable --now unattended-upgrades
 systemctl restart unattended-upgrades
 
 # Set sysctl networking for kubernetes
-cat > /etc/sysctl.d/k8s.conf << EOF
+cat <<EOF > /etc/sysctl.d/k8s.conf
 net.ipv4.ip_forward = 1
 net.ipv6.conf.all.forwarding=1
 net.bridge.bridge-nf-call-ip6tables = 1
