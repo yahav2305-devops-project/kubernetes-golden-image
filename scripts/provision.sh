@@ -56,7 +56,6 @@ harden_kernel_params() {
   } >> "$kernel_params_file"
 }
 
-
 # Disable uncommon protocols and kernal modules as these may have unknown vulnerabilties
 restrict_uncommon_network_protocols() {
   local network_protocols_blacklist_file="/etc/modprobe.d/blacklist-uncommon-networking.conf"
@@ -264,13 +263,11 @@ harden_journald() {
   } > /etc/systemd/journald.conf.d/log-rotation.conf
 
   sed -i 's/ForwardToSyslog=yes/ForwardToSyslog=no/g' /usr/lib/systemd/journald.conf.d/syslog.conf
-
-  systemctl reload-or-restart systemd-journald
 }
 
 # Haveged to improve entropy
 haveged() {
-  systemctl enable --now haveged
+  systemctl enable haveged
   printf '/usr/local/sbin/haveged -w 1024' > /etc/rc.local
 }
 
@@ -477,8 +474,7 @@ unattended_upgrades() {
     echo 'Unattended-Upgrade::Automatic-Reboot "false";'
   } > /etc/apt/apt.conf.d/50unattended-upgrades
 
-  systemctl enable --now unattended-upgrades
-  systemctl restart unattended-upgrades
+  systemctl enable unattended-upgrades
 }
 
 # Setup and configure cloud-init
@@ -567,8 +563,6 @@ main() {
 
   harden_crash_dumps_info
 
-  emergency_root_pass_required
-
   connection_warning
 
   # APT
@@ -593,8 +587,6 @@ main() {
   # Kubernetes
   kubernetes_sysctl_networking
 
-  # Apply sysctl configuration
-  sysctl --system
 }
 
 main
