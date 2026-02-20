@@ -119,7 +119,7 @@ apt_configuration() {
 
   # Install required packages
   apt update
-  apt install -y $APT_PACKAGES
+  apt install -y -qq $APT_PACKAGES
 }
 
 # Harden permissions for folder permissions related to users & groups
